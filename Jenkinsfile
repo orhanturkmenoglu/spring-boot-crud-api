@@ -65,10 +65,6 @@ pipeline {
 		dockerHome = tool 'docker'
 		mavenHome = tool 'maven'
 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
-		DB_HOST = "localhost"  // Eğer Docker içindeyse "host.docker.internal" deneyebilirsin
-		DB_PORT = "3306"
-		DB_USER = "root"
-		DB_PASSWORD = "12345"
 	}
     stages {
 		stage('Checkout') {
