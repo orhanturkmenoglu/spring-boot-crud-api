@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # Spring Boot Uygulaması
+  springboot-app:
+    build: .  # Spring Boot uygulamanızın bulunduğu dizinde build işlemi yapılacak
+    ports:
+      - "8081:8080"  # Spring Boot uygulamasını dışarıya 8081 portu üzerinden açıyoruz
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/product-db  # MySQL bağlantı URL'si
+      - SPRING_DATASOURCE_USERNAME=root  # MySQL kullanıcı adı
+      - SPRING_DATASOURCE_PASSWORD=12345  # MySQL şifresi
+    depends_on:
+      - mysql  # Spring Boot uygulamasının başlamadan önce MySQL container'ının başlatılmasını sağlar
+    networks:
+      - app-network  # Uygulamanın belirli bir ağda çalışmasını sağlarız
+
+  # MySQL Veritabanı
+  mysql:
+    image: mysql:latest  # MySQL'in en son sürümünü kullanıyoruz
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345  # MySQL root şifresi
+      MYSQL_DATABASE: product-db  # Başlangıçta oluşturulacak veritabanı
+    ports:
+      - "3307:3306"  # MySQL'i dışarıya 3306 portu ile açıyoruz
+    volumes:
+      - mysql_data:/var/lib/mysql  # Veritabanı verilerinin kalıcı olmasını sağlamak için volume kullanıyoruz
+    networks:
+      - app-network  # Aynı ağda yer almasını sağlıyoruz
+
+  # Jenkins
+  jenkins:
+    image: jenkins/jenkins:2.492.1  # Jenkins'in en son LTS sürümünü kullanıyoruz
+    container_name: jenkins  # Container adı
+    privileged: true
+    ports:
+      - "8080:8080"  # Jenkins için 8081 portunu dışarıya açıyoruz
+      - "50000:50000"  # Jenkins için 50000 portunu dışarıya açıyoruz
+    volumes:
+        - /tmp/jenkins:/var/jenkins_home #Remember that, the tmp directory is designed to be wiped on system reboot.
+        - /var/run/docker.sock:/var/run/docker.sock
+        - /usr/local/bin/docker:/usr/local/bin/docker
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # Jenkins kurulum sihirbazını devre dışı bırakıyoruz
+    networks:
+      - app-network  # Jenkins'in aynı ağda yer almasını sağlıyoruz
+
+# Ağ Tanımları
+networks:
+  app-network:
+    driver: bridge  # Container'lar arasında iletişim sağlamak için bridge network kullanıyoruz
+
+# Volume Tanımları
+volumes:
+  jenkins_home:
+    driver: local  # Jenkins için volume verilerin lokal olarak depolanmasını sağlıyoruz
+  mysql_data:
+    driver: local  # MySQL veritabanı için verilerin kalıcı olmasını sağlıyoruz

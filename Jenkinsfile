@@ -59,6 +59,51 @@ pipeline {
     }
 
 }*/
+/*pipeline {
+	agent any
+	environment {
+		dockerHome = tool 'docker'
+		mavenHome = tool 'maven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+	}
+    stages {
+		stage('Checkout') {
+			steps {
+				echo "PATH -${PATH}"
+				echo "BUILD_NUMBER -${env.BUILD_NUMBER}"
+				echo "BUILD_ID -${env.BUILD_ID}"
+				echo "JOB_NAME -${env.JOB_NAME}"
+				echo "BUILD_TAG -${env.BUILD_TAG}"
+				echo "BUILD_URL -${env.BUILD_URL}"
+				echo 'Build aşaması çalışıyor...'
+            }
+        }
+        stage('Compile') {
+			steps {
+				sh "mvn clean compile"
+            }
+        }
+         stage('Test') {
+			steps {
+				echo 'Test aşaması çalışıyor...'
+            }
+        }
+
+    }
+     post {
+		success {
+			echo 'Pipeline başarıyla tamamlandı!'
+        }
+        failure {
+			echo 'Pipeline başarısız oldu!'
+        }
+        always {
+			echo 'Bu adım her zaman çalışacak.'
+        }
+    }
+
+}*/
+
 pipeline {
 	agent any
 	environment {
