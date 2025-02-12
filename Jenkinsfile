@@ -1,8 +1,14 @@
 //  Bu, bir Jenkins pipeline'ını tanımlar. Tüm iş akışını (pipeline) kapsar. İçinde agent, stages gibi anahtar kelimeler bulunur.
 pipeline {
 	// fadesi, pipeline'ın hangi ajan (worker) üzerinde çalışacağını belirtir. any, herhangi bir uygun ajanda çalışacağı anlamına gelir. Bu, Jenkins’in herhangi bir çalışan node'u kullanarak pipeline'ı çalıştırmasını sağlar.
-	agent any
+	// agent any : farklı agentlarda kullanabiliriz
 	//stages bloğu, pipeline'ın farklı aşamalarını (stages) içerir. Her bir aşama, sırasıyla çalıştırılacak bir dizi adımı tanımlar. Burada her aşama, stage ile tanımlanır.
+
+   	agent {
+		docker{
+			image 'nginx:latest'
+		}
+	}
     stages {
 		//  pipeline'ınızın ilk adımıdır ve genellikle uygulamanızın derlenmesi veya yapılandırılması için kullanılır.
 		stage('Build') {
