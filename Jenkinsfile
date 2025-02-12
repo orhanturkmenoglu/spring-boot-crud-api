@@ -65,6 +65,10 @@ pipeline {
 		dockerHome = tool 'docker'
 		mavenHome = tool 'maven'
 		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+		DB_HOST = "localhost"  // Eğer Docker içindeyse "host.docker.internal" deneyebilirsin
+		DB_PORT = "3306"
+		DB_USER = "root"
+		DB_PASSWORD = "12345"
 	}
     stages {
 		stage('Checkout') {
@@ -85,7 +89,12 @@ pipeline {
         }
          stage('Test') {
 			steps {
-				sh "mvn test"
+				sh """
+				mvn test \
+					-Dspring.datasource.url=jdbc:mysql://$DB_HOST:$DB_PORT/product-db \
+					-Dspring.datasource.username=$DB_USER \
+					-Dspring.datasource.password=$DB_PASSWORD
+				"""
             }
         }
 
