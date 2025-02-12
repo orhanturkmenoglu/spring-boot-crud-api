@@ -17,4 +17,16 @@ pipeline {
             }
         }
     }
+     post {
+		success {
+			echo 'Pipeline başarıyla tamamlandı!'
+        }
+        failure {
+			echo 'Pipeline başarısız oldu!'
+        }
+        always {
+			echo 'Bu adım her zaman çalışacak.'
+        }
+    }
+
 }
