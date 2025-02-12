@@ -20,9 +20,6 @@ pipeline {
 		//  pipeline'ınızın ilk adımıdır ve genellikle uygulamanızın derlenmesi veya yapılandırılması için kullanılır.
 		stage('Build') {
 			steps {
-				commandShell "mvn --version"
-				commandShell "docker --version"
-				commandShell "java --version"
 				echo "PATH -${PATH}"
 				echo "BUILD_NUMBER -${env.BUILD_NUMBER}"
 				echo "BUILD_ID -${env.BUILD_ID}"
