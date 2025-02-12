@@ -23,7 +23,7 @@ pipeline {
             }
         }
     }
-    // enkins pipeline'larında post bloğu, pipeline tamamlandıktan sonra yapılacak işlemleri belirler.
+    // jenkins pipeline'larında post bloğu, pipeline tamamlandıktan sonra yapılacak işlemleri belirler.
      post {
 		success {
 			echo 'Pipeline başarıyla tamamlandı!'
