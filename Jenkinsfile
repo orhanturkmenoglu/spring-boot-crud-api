@@ -4,15 +4,31 @@ pipeline {
 	// agent any : farklı agentlarda kullanabiliriz
 	//stages bloğu, pipeline'ın farklı aşamalarını (stages) içerir. Her bir aşama, sırasıyla çalıştırılacak bir dizi adımı tanımlar. Burada her aşama, stage ile tanımlanır.
 
-   	agent {
+  /* 	agent {
 		docker{
 			image 'nginx:latest'
 		}
+	}*/
+
+	agent any
+	environment {
+		dockerHome = tool 'docker'
+		mavenHome = tool 'maven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
 	}
     stages {
 		//  pipeline'ınızın ilk adımıdır ve genellikle uygulamanızın derlenmesi veya yapılandırılması için kullanılır.
 		stage('Build') {
 			steps {
+				commandShell "mvn --version"
+				commandShell "docker --version"
+				commandShell "java --version"
+				echo "PATH -${PATH}"
+				echo "BUILD_NUMBER -${env.BUILD_NUMBER}"
+				echo "BUILD_ID -${env.BUILD_ID}"
+				echo "JOB_NAME -${env.JOB_NAME}"
+				echo "BUILD_TAG -${env.BUILD_TAG}"
+				echo "BUILD_URL -${env.BUILD_URL}"
 				echo 'Build aşaması çalışıyor...'
             }
         }
