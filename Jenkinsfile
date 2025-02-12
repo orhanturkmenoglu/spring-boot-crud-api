@@ -1,14 +1,17 @@
+/*
 //  Bu, bir Jenkins pipeline'ını tanımlar. Tüm iş akışını (pipeline) kapsar. İçinde agent, stages gibi anahtar kelimeler bulunur.
 pipeline {
 	// fadesi, pipeline'ın hangi ajan (worker) üzerinde çalışacağını belirtir. any, herhangi bir uygun ajanda çalışacağı anlamına gelir. Bu, Jenkins’in herhangi bir çalışan node'u kullanarak pipeline'ı çalıştırmasını sağlar.
 	// agent any : farklı agentlarda kullanabiliriz
 	//stages bloğu, pipeline'ın farklı aşamalarını (stages) içerir. Her bir aşama, sırasıyla çalıştırılacak bir dizi adımı tanımlar. Burada her aşama, stage ile tanımlanır.
 
-  /* 	agent {
+  */
+/* 	agent {
 		docker{
 			image 'nginx:latest'
 		}
-	}*/
+	}*//*
+
 
 	agent any
 	environment {
@@ -43,6 +46,54 @@ pipeline {
         }
     }
     // jenkins pipeline'larında post bloğu, pipeline tamamlandıktan sonra yapılacak işlemleri belirler.
+     post {
+		success {
+			echo 'Pipeline başarıyla tamamlandı!'
+        }
+        failure {
+			echo 'Pipeline başarısız oldu!'
+        }
+        always {
+			echo 'Bu adım her zaman çalışacak.'
+        }
+    }
+
+}*/
+pipeline {
+	agent any
+	environment {
+		dockerHome = tool 'docker'
+		mavenHome = tool 'maven'
+		PATH = "$dockerHome/bin:$mavenHome/bin:$PATH"
+	}
+    stages {
+		stage('Checkout') {
+			steps {
+				echo "PATH -${PATH}"
+				echo "BUILD_NUMBER -${env.BUILD_NUMBER}"
+				echo "BUILD_ID -${env.BUILD_ID}"
+				echo "JOB_NAME -${env.JOB_NAME}"
+				echo "BUILD_TAG -${env.BUILD_TAG}"
+				echo "BUILD_URL -${env.BUILD_URL}"
+				echo 'Build aşaması çalışıyor...'
+            }
+        }
+        stage('Compile') {
+			steps {
+				sh "mvn clean compile"
+            }
+        }
+         stage('Test') {
+			steps {
+				sh "mvn test"
+            }
+        }
+         stage('Integration Test') {
+			steps {
+				sh "mvn failsafe:integration-test failsafe:verify"
+            }
+        }
+    }
      post {
 		success {
 			echo 'Pipeline başarıyla tamamlandı!'
