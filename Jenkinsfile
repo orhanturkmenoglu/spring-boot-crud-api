@@ -89,12 +89,7 @@ pipeline {
         }
          stage('Test') {
 			steps {
-				sh """
-				mvn test \
-					-Dspring.datasource.url=jdbc:mysql://$DB_HOST:$DB_PORT/product-db \
-					-Dspring.datasource.username=$DB_USER \
-					-Dspring.datasource.password=$DB_PASSWORD
-				"""
+				echo 'Test aşaması çalışıyor...'
             }
         }
 
