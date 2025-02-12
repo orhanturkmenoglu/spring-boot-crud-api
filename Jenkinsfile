@@ -13,7 +13,6 @@ pipeline {
 		//  pipeline'ınızın ilk adımıdır ve genellikle uygulamanızın derlenmesi veya yapılandırılması için kullanılır.
 		stage('Build') {
 			steps {
-				sh "nginx --version"
 				echo 'Build aşaması çalışıyor...'
             }
         }
