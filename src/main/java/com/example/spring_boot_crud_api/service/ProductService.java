@@ -8,6 +8,7 @@ import com.example.spring_boot_crud_api.model.Product;
 import com.example.spring_boot_crud_api.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class ProductService {
     }
 
     // Yeni ürün oluşturmak
+    @Transactional
     public ProductResponseDto createProduct(ProductRequestDto productCreateDto) {
         // Dönüşüm işlemi
         Product product = productMapper.toEntity(productCreateDto);
